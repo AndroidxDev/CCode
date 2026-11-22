@@ -54,7 +54,7 @@ if 'Группы' then
         GAME.lua = GAME.lua .. '\n pcall(function() local name, resumePhysics = ' .. name .. ', ' .. resumePhysics
         GAME.lua = GAME.lua .. '\n local group = GAME_groups[name] group.isVisible = true'
         GAME.lua = GAME.lua .. '\n if resumePhysics then for index = 1, group.numChildren do local object = {name ='
-        GAME.lua = GAME.lua .. '\n group[index].name}' require('Core.Simulation.events').BLOCKS['updHitbox']({}, true)
+        GAME.lua = GAME.lua .. '\n group[index].name}' require('Core.Simulation.events').BLOCKS['updHitbox']({}, true, true)
         GAME.lua = GAME.lua .. '\n end end end)'
     end
 

@@ -3622,16 +3622,16 @@
         "blocks.onFunNoob.params": [
             "アクション："
         ],
-        "blocks.onTouchBeganNoob": "指がピクチャに触れたとき",
-        "blocks.onTouchBeganNoob.params": [
+        "blocks.onTouchBegan2Noob": "指がピクチャに触れたとき",
+        "blocks.onTouchBegan2Noob.params": [
             "ピクチャー名："
         ],
-        "blocks.onTouchEndedNoob": "指はピクチャを離すとき",
-        "blocks.onTouchEndedNoob.params": [
+        "blocks.onTouchEnded2Noob": "指はピクチャを離すとき",
+        "blocks.onTouchEnded2Noob.params": [
             "ピクチャー名："
         ],
-        "blocks.onTouchMovedNoob": "指がピクチャ上を移動する限り",
-        "blocks.onTouchMovedNoob.params": [
+        "blocks.onTouchMoved2Noob": "指がピクチャ上を移動する限り",
+        "blocks.onTouchMoved2Noob.params": [
             "ピクチャー名："
         ],
         "blocks.onTouchDisplayBeganNoob": "指が画面に触れたとき",

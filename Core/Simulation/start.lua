@@ -46,8 +46,11 @@ local function getStartLua(linkBuild)
         \n GAME.currentStage[display.currentStage[child]] = true end GAME_conditions = {} GAME.group.const.enterFrame =\
         \n function() for i = 1, #GAME_conditions do GAME_conditions[i]() end end\
         \n Runtime:addEventListener(\'enterFrame\', GAME.group.const.enterFrame) GAME_backs = {} GAME_suspends = {}\
-        \n GAME.group.const.keyBack = function(e) if e.phase == \'up\' and (e.keyName == \'back\' or e.keyName == \'escape\') then\
-        \n for i = 1, #GAME_backs do GAME_backs[i]() end return true end end\
+        \n local timerForKey = 0 GAME.group.const.keyBack = function(e) if e.phase == \'down\'\
+        \n and (e.keyName == \'back\' or e.keyName == \'escape\') then timerForKey = system.getTimer() end\
+        \n if e.phase == \'up\' and (e.keyName == \'back\' or e.keyName == \'escape\') then\
+        \n if system.getTimer() - timerForKey < 500 then\
+        \n for i = 1, #GAME_backs do GAME_backs[i]() end return true end end end\
         \n Runtime:addEventListener(\'key\', GAME.group.const.keyBack) GAME_resumes = {} GAME.group.const.system =\
         \n function(e) if e.type == \'applicationSuspend\' or e.type == \'applicationExit\' then for i = 1, #GAME_suspends\
         \n do GAME_suspends[i]() end elseif e.type == \'applicationResume\' then for i = 1, #GAME_resumes do\
@@ -70,7 +73,7 @@ local function getStartLua(linkBuild)
         \n GAME.group.stops = GAME_stops GAME.group.ts = GAME_ts GAME.group.networks = GAME_networks'
 
     if linkBuild then
-        return 'pcall(function() local varsP, tablesP, funsP, funsC, a = CLASS(), {}, {}, {}' .. require 'Data.build'.. code .. code2
+        return 'pcall(function() local varsP, tablesP, funsP, funsC, a = CLASS(), {}, {}, {}' .. require 'Data.build' .. code .. code2
     else
         return 'pcall(function() local varsP, tablesP, funsP, funsC, a = CLASS(), {}, {}, {}' .. funs .. code .. code2
     end
@@ -84,7 +87,8 @@ M.remove = function()
     pcall(function() for _, v in pairs(GAME_objects3d) do pcall(function() v = nil end) end end)
     pcall(function() for _, v in ipairs(GAME_ts) do pcall(function() timer.cancel(v) v = nil end) end end)
     pcall(function() for _, v in pairs(GAME_widgets) do timer.new(20, 1, function()
-    pcall(function() v:removeSelf() v = nil end) end) end end) pcall(function() audio.setVolume(1) end)
+    pcall(function() v:removeSelf() v = nil end) end) end end)
+    pcall(function() if not IS_WIN and not IS_SIM then audio.setVolume(1) end end)
     pcall(function() for _, v in pairs(GAME_media) do timer.new(20, 1, function()
     pcall(function() audio.stop(v[2]) v[2] = nil end) pcall(function() audio.dispose(v[1]) v[1] = nil end)
     pcall(function() v:removeSelf() end) pcall(function() v = nil end) end) end end)
@@ -95,11 +99,12 @@ M.remove = function()
     pcall(function() RENDER.removeScene() end) pcall(function() for _, v in ipairs(GAME_accelerometers) do
     pcall(function() Runtime:removeEventListener('accelerometer', v) end) end end) pcall(function() for _, v in ipairs(GAME_collis) do
     pcall(function() Runtime:removeEventListener('collision', v) end) pcall(function() Runtime:removeEventListener('preCollision', v) end)
-    pcall(function() Runtime:removeEventListener('postCollision', v) end) end end)
+    pcall(function() Runtime:removeEventListener('hitCollision', v) end) end end)
     pcall(function() system.deactivate('multitouch') for _, v in pairs(GAME_objects) do
     pcall(function() v:removeEventListener('collision') end) pcall(function() v:removeEventListener('preCollision') end)
-    pcall(function() v:removeEventListener('postCollision') end) pcall(function() PHYSICS.removeBody(v) end) end end)
+    pcall(function() v:removeEventListener('hitCollision') end) pcall(function() PHYSICS.removeBody(v) end) end end)
     pcall(function() if M and M.camera then M.camera:destroy() end end)
+    pcall(function() for i = 1, 32 do audio.stop(i) end end)
     pcall(function() for _, v in pairs(GAME_texts) do pcall(function() PHYSICS.removeBody(v) end) end end)
     pcall(function() for _, v in pairs(GAME_particles) do pcall(function() v:removeSelf() v = nil end) end end)
     pcall(function() for _, v in pairs(GAME_joints) do pcall(function() v:removeSelf() v = nil end) end end)
@@ -131,6 +136,12 @@ M.new = function(linkBuild, isDebug)
     elseif M.data.settings.orientation == 'landscape' and (linkBuild or CURRENT_ORIENTATION ~= 'landscape') then
         M.lua = M.lua .. ' \n setOrientationApp({type = \'landscape\', sim = true})'
     end M.lua = M.lua .. ' \n GAME.camera = CAMERA.createView() GAME.group:insert(GAME.camera)'
+
+    if LOCAL.lang ~= 'en' then
+        M.lua = M.lua .. '\n GAME_strs = {["false"] = "' .. STR['editor.list.log.false'] .. '", '
+        M.lua = M.lua .. '["true"] = "' .. STR['editor.list.log.true'] .. '", '
+        M.lua = M.lua .. '["nil"] = "' .. STR['editor.list.log.nil'] .. '"}'
+    end
 
     local onStartCount = 0
     local nestedIndex = 0

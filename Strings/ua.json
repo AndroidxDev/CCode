@@ -3700,16 +3700,16 @@
         "blocks.onFunNoob.params": [
             "Дія:"
         ],
-        "blocks.onTouchBeganNoob": "Коли палець торкається зображення",
-        "blocks.onTouchBeganNoob.params": [
+        "blocks.onTouchBegan2Noob": "Коли палець торкається зображення",
+        "blocks.onTouchBegan2Noob.params": [
             "Назва зображення:"
         ],
-        "blocks.onTouchEndedNoob": "Коли палець відпускає зображення",
-        "blocks.onTouchEndedNoob.params": [
+        "blocks.onTouchEnded2Noob": "Коли палець відпускає зображення",
+        "blocks.onTouchEnded2Noob.params": [
             "Назва зображення:"
         ],
-        "blocks.onTouchMovedNoob": "Поки палець рухається по зображенню",
-        "blocks.onTouchMovedNoob.params": [
+        "blocks.onTouchMoved2Noob": "Поки палець рухається по зображенню",
+        "blocks.onTouchMoved2Noob.params": [
             "Назва зображення:"
         ],
         "blocks.onTouchDisplayBeganNoob": "Коли палець торкається екрану",

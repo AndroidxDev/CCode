@@ -18,10 +18,12 @@ M['newText'] = function(params, isLevel)
     end
 
     GAME.lua = GAME.lua .. '\n pcall(function() local name, colors, font = ' .. name .. ', ' .. colors .. ', other.getFont(' .. font .. ')'
-    GAME.lua = GAME.lua .. '\n pcall(function() GAME_texts[name]:removeSelf() end) GAME_texts[name] ='
-    GAME.lua = GAME.lua .. '\n display.newText(GAME.group, tostring(' .. text .. '), ' .. posX .. ', ' .. posY .. ', font, ' .. size .. ')'
+    GAME.lua = GAME.lua .. '\n pcall(function() GAME_texts[name]:removeSelf() end)'
+    GAME.lua = GAME.lua .. '\n local label = ' .. text .. ' if label == true or label == false or label == nil then'
+    GAME.lua = GAME.lua .. '\n label = GAME_strs[tostring(label)] end GAME_texts[name] ='
+    GAME.lua = GAME.lua .. '\n display.newText(GAME.group, tostring(label), ' .. posX .. ', ' .. posY .. ', font, ' .. size .. ')'
     GAME.lua = GAME.lua .. '\n pcall(function() GAME_texts[name]:setFillColor(colors[1]/255, colors[2]/255, colors[3]/255) end)'
-    GAME.lua = GAME.lua .. '\n pcall(function() GAME_texts[name].alpha = ' ..  alpha .. ' / 100 end)'
+    GAME.lua = GAME.lua .. '\n pcall(function() GAME_texts[name].alpha = ' .. alpha .. ' / 100 end)'
     GAME.lua = GAME.lua .. '\n GAME_texts[name]._density = 1 GAME_texts[name]._bounce = 0'
     GAME.lua = GAME.lua .. '\n GAME_texts[name]._friction = 0 GAME_texts[name]._gravity = 1'
     GAME.lua = GAME.lua .. '\n GAME_texts[name]._body = \'\' GAME_texts[name]._hitbox = {}'
@@ -132,6 +134,15 @@ M['resetTable'] = function(params)
     local value = CALC(params[2], '\'{}\'')
 
     GAME.lua = GAME.lua .. '\n pcall(function() ' .. table .. ' = JSON.decode(' .. value .. ') end)'
+end
+
+M['readValue'] = function(params)
+    local var = CALC(params[1], 'a', true)
+    local key = CALC(params[2])
+    local value = CALC(params[3])
+
+    GAME.lua = GAME.lua .. '\n pcall(function() local data = GET_GAME_SAVE(CURRENT_LINK)'
+    GAME.lua = GAME.lua .. '\n ' .. var .. ' = data[tostring(' .. key .. ')] or ' .. value .. ' end)'
 end
 
 M['saveValue'] = function(params)

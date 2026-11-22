@@ -35,7 +35,12 @@ if 'Физика 1' then
         GAME.lua = GAME.lua .. '\n GAME_objects[name].bodyType = type'
         GAME.lua = GAME.lua .. '\n GAME_objects[name]._maskBits = maskBits'
         GAME.lua = GAME.lua .. '\n GAME_objects[name]._categoryBit = categoryBit'
-        GAME.lua = GAME.lua .. '\n GAME_objects[name].gravityScale = GAME_objects[name]._gravity end)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name].gravityScale = GAME_objects[name]._gravity'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name].collision = function() end'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]:setPreSolveEventsEnabled(true)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]:setHitEventsEnabled(true)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]:addEventListener(\'collision\')'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]:removeEventListener(\'collision\') end)'
 
         if isLevel then
             GAME.lua = GAME.lua .. '\n pcall(function() local name = object.name'
@@ -104,7 +109,10 @@ if 'Физика 1' then
         GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.halfHeight = ' .. halfHeight
         GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.offsetX = ' .. offsetX
         GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.offsetY = ' .. offsetY
-        GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.rotation = ' .. rotation .. ' end)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.rotation = ' .. rotation
+        GAME.lua = GAME.lua .. '\n local object = {name = name}'
+        require('Core.Simulation.events').BLOCKS.updHitbox({}, true)
+        GAME.lua = GAME.lua .. '\n end)'
     end
 
     M['setHitboxCircle'] = function(params)
@@ -112,7 +120,10 @@ if 'Физика 1' then
         local radius = CALC(params[2])
 
         GAME.lua = GAME.lua .. '\n pcall(function() local name = ' .. name .. ' GAME_objects[name]._hitbox.type = \'circle\''
-        GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.radius = ' .. radius .. ' end)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.radius = ' .. radius
+        GAME.lua = GAME.lua .. '\n local object = {name = name}'
+        require('Core.Simulation.events').BLOCKS.updHitbox({}, true)
+        GAME.lua = GAME.lua .. '\n end)'
     end
 
     M['setHitboxMesh'] = function(params)
@@ -121,7 +132,10 @@ if 'Физика 1' then
 
         GAME.lua = GAME.lua .. '\n pcall(function() local name = ' .. name .. ' GAME_objects[name]._hitbox.type = \'mesh\''
         GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.outline = graphics.newOutline(' .. mesh .. ','
-        GAME.lua = GAME.lua .. '\n GAME_objects[name]._link, GAME_objects[name]._baseDir) end)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]._link, GAME_objects[name]._baseDir)'
+        GAME.lua = GAME.lua .. '\n local object = {name = name}'
+        require('Core.Simulation.events').BLOCKS.updHitbox({}, true)
+        GAME.lua = GAME.lua .. '\n end)'
     end
 
     M['setHitboxPolygon'] = function(params)
@@ -129,10 +143,13 @@ if 'Физика 1' then
         local polygon = CALC(params[2])
 
         GAME.lua = GAME.lua .. '\n pcall(function() local name = ' .. name .. ' GAME_objects[name]._hitbox.type = \'polygon\''
-        GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.shape = ' .. polygon .. ' end)'
+        GAME.lua = GAME.lua .. '\n GAME_objects[name]._hitbox.shape = ' .. polygon
+        GAME.lua = GAME.lua .. '\n local object = {name = name}'
+        require('Core.Simulation.events').BLOCKS.updHitbox({}, true)
+        GAME.lua = GAME.lua .. '\n end)'
     end
 
-    M['updHitbox'] = function(params, isLevel)
+    M['updHitbox'] = function(params, isLevel, isShow)
         local name = CALC(params[1])
         local type = 'GAME_objects[name]._body'
         local friction = 'GAME_objects[name]._friction'
@@ -150,17 +167,23 @@ if 'Физика 1' then
             name = 'object.name'
         end
 
-        GAME.lua = GAME.lua .. '\n pcall(function() local name = ' .. name
+        GAME.lua = GAME.lua .. '\n pcall(function() local name, isShow = ' .. name .. ', ' .. tostring(isShow)
         GAME.lua = GAME.lua .. '\n local isSensor, isFixedRotation, isBullet = false, false, false pcall(function()'
         GAME.lua = GAME.lua .. '\n isFixedRotation = ' .. isFixedRotation .. ' isSensor, isBullet = ' .. isSensor .. ', ' .. isBullet .. ' end)'
-        GAME.lua = GAME.lua .. '\n pcall(function() PHYSICS.removeBody(GAME_objects[name]) end)'
-        GAME.lua = GAME.lua .. '\n print(123) local params = other.getPhysicsParams(' .. friction .. ', ' .. bounce .. ', ' .. density .. ', ' .. hitbox .. ','
+        GAME.lua = GAME.lua .. '\n if not isShow then pcall(function() PHYSICS.removeBody(GAME_objects[name]) end) end'
+        GAME.lua = GAME.lua .. '\n if GAME_objects[name]._body == \'\' then return end'
+        GAME.lua = GAME.lua .. '\n local params = other.getPhysicsParams(' .. friction .. ', ' .. bounce .. ', ' .. density .. ', ' .. hitbox .. ','
         GAME.lua = GAME.lua .. '\n {' .. categoryBit .. ', ' .. maskBits .. '}) PHYSICS.addBody(GAME_objects[name], \'dynamic\','
         GAME.lua = GAME.lua .. '\n UNPACK(params)) pcall(function() GAME_objects[name].isSensor = isSensor end)'
         GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name].bodyType = ' .. type .. ' end)'
         GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name].isFixedRotation = isFixedRotation end)'
         GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name].isBullet = isBullet end)'
-        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name].gravityScale = ' .. gravity .. ' end) end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name].gravityScale = ' .. gravity .. ' end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name].collision = function() end end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name]:setPreSolveEventsEnabled(true) end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name]:setHitEventsEnabled(true) end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name]:addEventListener(\'collision\') end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[name]:removeEventListener(\'collision\') end) end)'
     end
 
     M['setSensor'] = function(params)
@@ -263,7 +286,7 @@ if 'Физика 2' then
     end
 
     M['setTorque'] = function(params)
-        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[' .. CALC(params[1]) .. ']:applyTorque(' .. CALC(params[2])  .. ') end)'
+        GAME.lua = GAME.lua .. '\n pcall(function() GAME_objects[' .. CALC(params[1]) .. ']:applyTorque(' .. CALC(params[2]) .. ') end)'
     end
 
     M['disableCollision'] = function(params)
@@ -292,7 +315,12 @@ if 'Физика 2' then
         GAME.lua = GAME.lua .. '\n GAME_texts[name]._friction = params.friction'
         GAME.lua = GAME.lua .. '\n GAME_texts[name]._gravity = ' .. gravity
         GAME.lua = GAME.lua .. '\n GAME_texts[name]._body = type'
-        GAME.lua = GAME.lua .. '\n GAME_texts[name].gravityScale = GAME_texts[name]._gravity end)'
+        GAME.lua = GAME.lua .. '\n GAME_texts[name].gravityScale = GAME_texts[name]._gravity'
+        GAME.lua = GAME.lua .. '\n GAME_texts[name].collision = function() end'
+        GAME.lua = GAME.lua .. '\n GAME_texts[name]:setPreSolveEventsEnabled(true)'
+        GAME.lua = GAME.lua .. '\n GAME_texts[name]:setHitEventsEnabled(true)'
+        GAME.lua = GAME.lua .. '\n GAME_texts[name]:addEventListener(\'collision\')'
+        GAME.lua = GAME.lua .. '\n GAME_texts[name]:removeEventListener(\'collision\') end)'
     end
 
     M['setHitboxVisible'] = function(params)
@@ -563,7 +591,7 @@ if 'Физика 3' then
         GAME.lua = GAME.lua .. '\n if objects[bodyA]._body ~= \'\' and objects[bodyB]._body ~= \'\' then'
         GAME.lua = GAME.lua .. '\n GAME_joints[' .. joint .. '] = PHYSICS.newJoint(\'pulley\','
         GAME.lua = GAME.lua .. '\n objects[bodyA], objects[bodyB], ' .. statXA .. ' + objects[bodyA].x, -' .. statYA .. ' + objects[bodyA].y,'
-        GAME.lua = GAME.lua .. '\n ' .. statXB .. ' + objects[bodyB].x, -' .. statYB  .. ' + objects[bodyB].y,'
+        GAME.lua = GAME.lua .. '\n ' .. statXB .. ' + objects[bodyB].x, -' .. statYB .. ' + objects[bodyB].y,'
         GAME.lua = GAME.lua .. '\n ' .. bodyXA .. ' + objects[bodyA].x, -' .. bodyYA .. ' + objects[bodyA].y, ' .. bodyXB
         GAME.lua = GAME.lua .. '\n + objects[bodyB].x, -' .. bodyYB .. ' + objects[bodyB].y, ' .. ratio .. ') end end)'
     end

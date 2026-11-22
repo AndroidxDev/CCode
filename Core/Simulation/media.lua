@@ -122,7 +122,7 @@ if 'Файлы' then
 
     M['copyFolder'] = function(params)
         GAME.lua = GAME.lua .. '\n pcall(function() OS_COPY(other.getPath(' .. CALC(params[1]) .. ', ' .. CALC(params[2]) .. '),'
-        GAME.lua = GAME.lua .. '\n other.getPath(' .. CALC(params[3]) .. ', ' .. CALC(params[4]) .. ')) end)'
+        GAME.lua = GAME.lua .. '\n other.getPath(' .. CALC(params[3]) .. ', ' .. CALC(params[4]) .. '), true) end)'
     end
 
     M['removeFolder'] = function(params)

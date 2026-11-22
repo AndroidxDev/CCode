@@ -7,7 +7,12 @@ local table_insert = table.insert
 local math_huge = math.huge
 local math_nhuge = -math.huge
 
-local clamp = function(v, l, h) return (v < l and l) or (v > h and h) or v end
+local _clamp = function(v, l, h) return (v < l and l) or (v > h and h) or v end
+local clamp = function(v, l, h)
+	local ok, res = pcall(_clamp, v, l, h)
+	if ok then return res end
+	return 0
+end
 
 lib_perspective.createView = function(layerCount)
 	local view = display_newGroup()

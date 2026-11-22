@@ -3700,16 +3700,16 @@
         "blocks.onFunNoob.params": [
             "Akcja:"
         ],
-        "blocks.onTouchBeganNoob": "Gdy palec dotknie zdjęcia",
-        "blocks.onTouchBeganNoob.params": [
+        "blocks.onTouchBegan2Noob": "Gdy palec dotknie zdjęcia",
+        "blocks.onTouchBegan2Noob.params": [
             "Nazwa zdjęcia:"
         ],
-        "blocks.onTouchEndedNoob": "Gdy palec puści zdjęcie",
-        "blocks.onTouchEndedNoob.params": [
+        "blocks.onTouchEnded2Noob": "Gdy palec puści zdjęcie",
+        "blocks.onTouchEnded2Noob.params": [
             "Nazwa zdjęcia:"
         ],
-        "blocks.onTouchMovedNoob": "Kiedy palec porusza się po zdjęciu",
-        "blocks.onTouchMovedNoob.params": [
+        "blocks.onTouchMoved2Noob": "Kiedy palec porusza się po zdjęciu",
+        "blocks.onTouchMoved2Noob.params": [
             "Nazwa zdjęcia:"
         ],
         "blocks.onTouchDisplayBeganNoob": "Gdy palec dotknie ekranu",

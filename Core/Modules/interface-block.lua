@@ -67,7 +67,6 @@ local listener = function(e, scroll, group, type)
                 if type == 'programs' and ALERT then
                     local data = GET_GAME_CODE(e.target.link)
 
-
                     if tonumber(data.build) > 1170 then
                         data = _supportOldestVersion(data, e.target.link)
                         SET_GAME_CODE(e.target.link, data)
@@ -92,9 +91,6 @@ local listener = function(e, scroll, group, type)
                         LOCAL.last_link = CURRENT_LINK
                         MENU.group[9].text = LOCAL.last
                         NEW_DATA()
-
-                        -- PROGRAM.group.alpha = 0
-                        -- timer.new(1, 1, function() transition.to(PROGRAM.group, {alpha = 1, time = 200}) end)
                     end
                 elseif type == 'program' and ALERT then
                     if e.target.text.text == STR['program.scripts'] or e.target.text.text == STR['program.scenarios'] then
@@ -102,98 +98,53 @@ local listener = function(e, scroll, group, type)
                         SCRIPTS = require 'Interfaces.scripts'
                         SCRIPTS.create()
                         SCRIPTS.group.isVisible = true
-                        -- SCRIPTS.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(SCRIPTS.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.images'] or e.target.text.text == STR['program.pictures'] then
                         group.isVisible = false
                         IMAGES = require 'Interfaces.images'
                         IMAGES.create()
                         IMAGES.group.isVisible = true
-                        -- IMAGES.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(IMAGES.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.levels'] then
                         group.isVisible = false
                         LEVELS = require 'Interfaces.levels'
                         LEVELS.create()
                         LEVELS.group.isVisible = true
-                        -- LEVELS.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(LEVELS.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.sounds'] then
                         group.isVisible = false
                         SOUNDS = require 'Interfaces.sounds'
                         SOUNDS.create()
                         SOUNDS.group.isVisible = true
-                        -- SOUNDS.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(SOUNDS.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.videos'] then
                         group.isVisible = false
                         VIDEOS = require 'Interfaces.videos'
                         VIDEOS.create()
                         VIDEOS.group.isVisible = true
-                        -- VIDEOS.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(VIDEOS.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.fonts'] then
                         group.isVisible = false
                         FONTS = require 'Interfaces.fonts'
                         FONTS.create()
                         FONTS.group.isVisible = true
-                        -- FONTS.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(FONTS.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.resources'] then
                         group.isVisible = false
                         RESOURCES = require 'Interfaces.resources'
                         RESOURCES.create()
                         RESOURCES.group.isVisible = true
-                        -- RESOURCES.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(RESOURCES.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['menu.settings'] then
                         group.isVisible = false
                         PSETTINGS = require 'Interfaces.program-settings'
                         PSETTINGS.create()
                         PSETTINGS.group.isVisible = true
-                        -- PSETTINGS.group.x = DISPLAY_WIDTH
-                        -- timer.new(1, 1, function() transition.to(PSETTINGS.group, {x = 0, time = 100}) end)
                     elseif e.target.text.text == STR['program.export'] then
                         group:removeSelf() group = nil
                         PROGRAMS.group.isVisible = true
                         require('Core.Share.export').new(CURRENT_LINK)
                     elseif e.target.text.text == STR['program.build'] then
-                        -- WINDOW.new(STR['robodog.want.buy.apk'], {STR['button.close']}, function(e)
-                        --     if e.index == 2 then
-                        --         timer.new(1, 1, function()
-                                    -- if CCOIN.buy('10') then
-                                        group:removeSelf() group = nil
-                                        PROGRAMS.group.isVisible = true
-                                        require('Core.Share.build').new(CURRENT_LINK)
-                                    -- else
-                                    --     local message = STR['robodog.not.enough.ccoin'] .. '\n' .. STR['robodog.need.ccoin'] .. '10'
-                                    --     WINDOW.new(message, {STR['button.close']}, function(ev) end, 3)
-                                    --     WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
-                                    --     WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
-                                    -- end
-                        --         end)
-                        --     end
-                        -- end, 4)
+                        group:removeSelf() group = nil
+                        PROGRAMS.group.isVisible = true
+                        require('Core.Share.build').new(CURRENT_LINK)
                     elseif e.target.text.text == STR['program.aab'] then
-                        WINDOW.new(STR['robodog.want.buy.aab'], {STR['button.close']}, function(e)
-                        --     if e.index == 2 then
-                        --         timer.new(1, 1, function()
-                                    -- if CCOIN.buy('100') then
-                                        -- group:removeSelf() group = nil
-                                        -- PROGRAMS.group.isVisible = true
-                                        -- require('Core.Share.build').new(CURRENT_LINK, true)
-                                    -- else
-                                    --     local message = STR['robodog.not.enough.ccoin'] .. '\n' .. STR['robodog.need.ccoin'] .. '100'
-                                    --     WINDOW.new(message, {STR['button.close']}, function(ev) end, 3)
-                                    --     WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
-                                    --     WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
-                                    -- end
-                        --         end)
-                        --     end
-                        end, 4)
-
-                        WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
-                        WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
+                        group:removeSelf() group = nil
+                        PROGRAMS.group.isVisible = true
+                        require('Core.Share.build').new(CURRENT_LINK, true)
                     end
                 elseif type == 'scripts' then
                     if e.target.move then
@@ -470,7 +421,7 @@ local listener = function(e, scroll, group, type)
                         end
                     end
 
-                    e.target.checkbox:setState({isOn=not e.target.checkbox.isOn})
+                    e.target.checkbox:setState({isOn = not e.target.checkbox.isOn})
                 end
             end
         end
@@ -612,7 +563,7 @@ M.new = function(text, scroll, group, type, index, filter, link, comment, indexF
 
         group.blocks[index].checkbox = WIDGET.newSwitch({
                 x = (group.blocks[index].x - group.blocks[index].width / 2) / 2, y = y, style = 'checkbox', width = 50, height = 50,
-                onPress = function(event) event.target:setState({isOn=not event.target.isOn}) end
+                onPress = function(event) event.target:setState({isOn = not event.target.isOn}) end
             }) group.blocks[index].checkbox.isVisible = false
         scroll:insert(group.blocks[index].checkbox)
     end

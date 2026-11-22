@@ -3700,16 +3700,16 @@
         "blocks.onFunNoob.params": [
             "Action:"
         ],
-        "blocks.onTouchBeganNoob": "When finger touches picture",
-        "blocks.onTouchBeganNoob.params": [
+        "blocks.onTouchBegan2Noob": "When finger touches picture",
+        "blocks.onTouchBegan2Noob.params": [
             "Picture name:"
         ],
-        "blocks.onTouchEndedNoob": "When finger releases picture",
-        "blocks.onTouchEndedNoob.params": [
+        "blocks.onTouchEnded2Noob": "When finger releases picture",
+        "blocks.onTouchEnded2Noob.params": [
             "Picture name:"
         ],
-        "blocks.onTouchMovedNoob": "When finger moves over picture",
-        "blocks.onTouchMovedNoob.params": [
+        "blocks.onTouchMoved2Noob": "When finger moves over picture",
+        "blocks.onTouchMoved2Noob.params": [
             "Picture name:"
         ],
         "blocks.onTouchDisplayBeganNoob": "When finger touches screen",

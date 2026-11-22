@@ -60,16 +60,14 @@ M.create = function()
     M.group.themeGroup = display.newGroup()
     M.group.learnGroup = display.newGroup()
 
-
-
     local bg = display.newImage(THEMES.bg(), CENTER_X, CENTER_Y)
-        bg.width = CENTER_X == 640 + 0 and DISPLAY_HEIGHT or DISPLAY_WIDTH
-        bg.height = CENTER_X == 640 + 0 and DISPLAY_WIDTH or DISPLAY_HEIGHT
-        bg.rotation = CENTER_X == 640 + 0 and 90 or 0
+        bg.width = CENTER_X == 640 and DISPLAY_HEIGHT or DISPLAY_WIDTH
+        bg.height = CENTER_X == 640 and DISPLAY_WIDTH or DISPLAY_HEIGHT
+        bg.rotation = CENTER_X == 640 and 90 or 0
     M.group:insert(bg)
 
     local width = DISPLAY_WIDTH - RIGHT_HEIGHT - 60
-    local width3 = (DISPLAY_WIDTH - RIGHT_HEIGHT - 60) / 3
+    local width3 = width / 3
 
     local buttonDogs = display.newRect(CENTER_X - width / 2 + width3 / 2, ZERO_Y + 50, width3, 56)
         buttonDogs:setFillColor(unpack(LOCAL.themes.toolbar))
@@ -172,47 +170,22 @@ M.create = function()
             if e.target.click then
                 e.target.click = false
                 WINDOW.new(STR['robodog.showAd.title'], {STR['robodog.showAd.promo'], STR['robodog.showAd.watch']}, function(e)
-                    if e.index == 1 then
-                        if DEVELOPERS[LOCAL.name_tester]
-                        or DEVICE_ID == ''
-                        or DEVICE_ID == ''
-                        or DEVICE_ID == ''
-                        or DEVICE_ID == '20036611d40a5d1d1b3b0df1628cdf2cdca95c8a5af6a16b470d70bb5b9ba082' then
-                            CCOIN.set(tonumber(LOCAL.niocc) + 1000)
-                        end
-                    elseif e.index == 2 then
-                        -- GET_UNIX_MINUTE(function(minutes)
-                            -- if minutes == 0 then
-                            --     WINDOW.new(STR['robodog.showAd.error'], {STR['button.okay']}, function() end)
-                            --     WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
-                            --     WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
-                            -- else
-                            timer.new(1, 1, function()
-                                local minutes = math.round(os.time() / 60)
-                                if minutes >= LOCAL.ads_time + 1 then
-                                    if not IS_WIN and not IS_SIM then
-                                        LOCAL.ads_time = minutes NEW_DATA()
-                                        ADS.showAd()
-                                        -- if ADS.isLoaded('AndroidVideo') then
-                                        --     LOCAL.ads_time = minutes NEW_DATA()
-                                        --     ADS.showAd()
-                                        -- else
-                                        --     ADS.load('AndroidVideo')
-                                        --     WINDOW.new(STR['robodog.showAd.error'], {STR['button.okay']}, function() end)
-                                        --     WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
-                                        --     WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
-                                        -- end
-                                    end
-                                else
-                                    local time = tostring(LOCAL.ads_time - minutes + 1)
-                                    local message = STR['robodog.showAd.time'] .. time
-                                    WINDOW.new(message, {STR['button.okay']}, function() end)
-                                    WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
-                                    WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
+                    if e.index == 2 then
+                        timer.new(1, 1, function()
+                            local minutes = math.round(os.time() / 60)
+                            if minutes >= LOCAL.ads_time + 1 then
+                                if not IS_WIN and not IS_SIM then
+                                    LOCAL.ads_time = minutes NEW_DATA()
+                                    ADS.showAd()
                                 end
-                            end)
-                            -- end
-                        -- end)
+                            else
+                                local time = tostring(LOCAL.ads_time - minutes + 1)
+                                local message = STR['robodog.showAd.time'] .. time
+                                WINDOW.new(message, {STR['button.okay']}, function() end)
+                                WINDOW.buttons[1].x = WINDOW.bg.x + WINDOW.bg.width / 4 - 5
+                                WINDOW.buttons[1].text.x = WINDOW.buttons[1].x
+                            end
+                        end)
                     end
                 end)
             end
@@ -363,44 +336,44 @@ end
 
 M.prices = {
     face = {
-        '0', '100', '3000', '500', '500', '1500',
-        '100', '1000', '150', '500', '300', '300',
-        '150', '300', '1000', '750', '300', '150',
-        '100', '100', '100', '300', '300', '500',
-        '1000', '2000', '100', '2000'
+        '0', '10', '300', '50', '50', '150',
+        '10', '100', '15', '50', '30', '30',
+        '15', '30', '100', '75', '30', '15',
+        '10', '10', '10', '30', '30', '50',
+        '100', '200', '10', '200'
     },
     eyes = {
-        '0', '100', '300', '200', '200', '100',
-        '1000', '500', '500', '300', '300', '500',
-        '1500', '500', '1000', '300', '100', '200',
-        '300', '300', '500', '300', '500', '200',
-        '200', '200', '300', '300', '200', '200',
-        '100', '200', '100', '100', '1000', '200',
-        '200', '200', '200', '1000'
+        '0', '10', '30', '20', '20', '10',
+        '100', '50', '50', '30', '30', '50',
+        '150', '50', '100', '30', '10', '20',
+        '30', '30', '50', '30', '50', '20',
+        '20', '20', '30', '30', '20', '20',
+        '10', '20', '10', '10', '100', '20',
+        '20', '20', '20', '100'
     },
     ears = {
-        '0', '300', '750', '1500', '200', '100',
-        '500', '100', '300', '500', '300', '1000',
-        '100', '1500', '100', '500', '300', '1000',
-        '500', '300', '300', '200', '200', '200',
-        '100', '100', '200', '300', '100', '500',
-        '100', '300', '100', '200', '200', '1000',
-        '500', '300', '1500'
+        '0', '30', '75', '150', '20', '10',
+        '50', '10', '30', '50', '30', '100',
+        '10', '150', '10', '50', '30', '100',
+        '50', '30', '30', '20', '20', '20',
+        '10', '10', '20', '30', '10', '50',
+        '10', '30', '10', '20', '20', '100',
+        '50', '30', '150'
     },
     mouth = {
-        '0', '750', '300', '200', '200', '200',
-        '100', '100', '200', '300', '300', '300',
-        '750', '300', '200', '100', '100', '300',
-        '200', '100', '300', '100', '1000', '200',
-        '200', '200', '200', '200', '200', '200',
-        '200', '200', '200', '200', '750', '750'
+        '0', '75', '30', '20', '20', '20',
+        '10', '10', '20', '30', '30', '30',
+        '75', '30', '20', '10', '10', '30',
+        '20', '10', '30', '10', '100', '20',
+        '20', '20', '20', '20', '20', '20',
+        '20', '20', '20', '20', '75', '75'
     },
     accessories = {
-        '0', '2000', '1000', '1500', '1500', '1000',
-        '1500', '1500', '1000', '1000', '1000', '1500',
-        '1000', '1000', '1500', '2000', '1000', '1000',
-        '1500', '1500', '1000', '2000', '1500', '2000',
-        '1000', '2000', '1500', '2000', '1000'
+        '0', '200', '100', '150', '150', '100',
+        '150', '150', '100', '100', '100', '150',
+        '100', '100', '150', '200', '100', '100',
+        '150', '150', '100', '200', '150', '200',
+        '100', '200', '150', '200', '100'
     }
 }
 

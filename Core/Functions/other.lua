@@ -50,7 +50,7 @@ M.getPhysicsParams = function(friction, bounce, density, hitbox, filter)
                         end
                     end
 
-                    params[i].shape = hitbox.shape[i]
+                    params[i].shape = safeBody(hitbox.shape[i])
                 end
             else
                 for i = 1, #hitbox.shape do
@@ -59,10 +59,10 @@ M.getPhysicsParams = function(friction, bounce, density, hitbox, filter)
                     end
                 end
 
-                params.shape = hitbox.shape
+                params.shape = safeBody(hitbox.shape)
             end
         else
-            params.shape = hitbox.shape
+            params.shape = safeBody(hitbox.shape)
         end
     end
 

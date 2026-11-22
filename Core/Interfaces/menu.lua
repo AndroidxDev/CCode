@@ -1,13 +1,10 @@
 local listeners = {}
 
 listeners.but_myprogram = function(target)
-
     MENU.group.isVisible = false
     PROGRAMS = require 'Interfaces.programs'
     PROGRAMS.create()
     PROGRAMS.group.isVisible = true
-    -- PROGRAMS.group.alpha = 0
-    -- timer.new(1, 1, function() transition.to(PROGRAMS.group, {alpha = 1, time = 200}) end)
 end
 
 function _supportOldestVersion(data, link)
@@ -34,24 +31,61 @@ function _supportOldestVersion(data, link)
         table.remove(data.scripts, 1)
     end
 
+    if tonumber(data.build) < 1370 then
+        for i = 1, #data.scripts do
+            local scriptData, nestedInfo, isEdited = GET_FULL_DATA(GET_GAME_SCRIPT(link, i, data))
+            for j = 1, #scriptData.params do
+                local name = scriptData.params[j].name
+                if (name == 'showGroup' or name == 'hideGroup') and not scriptData.params[j].params[2] then
+                    scriptData.params[j].params[2] = {{'yes', 'sl'}}
+                    isEdited = true
+                end
+            end
+            if isEdited then
+                SET_GAME_SCRIPT(link, GET_NESTED_DATA(scriptData, nestedInfo, INFO), i, data)
+            end
+        end
+    end
+
+    if tonumber(data.build) < 1371 then
+        for i = 1, #data.scripts do
+            local scriptData, nestedInfo, isEdited = GET_FULL_DATA(GET_GAME_SCRIPT(link, i, data))
+            for j = 1, #scriptData.params do
+                for _, param in ipairs(scriptData.params[j].params) do
+                    if type(param) == 'table' then
+                        for index, token in ipairs(param) do
+                            if type(token) == 'table' and (token[1] == 'finger_touching_screen_x' or token[1] == 'finger_touching_screen_y') then
+                                if type(param[index + 1]) ~= 'table' or param[index + 1][1] ~= '(' or param[index + 1][2] ~= 's' then
+                                    table.insert(param, index + 1, {')', 's'})
+                                    table.insert(param, index + 1, {'(', 's'})
+                                    isEdited = true
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            if isEdited then
+                SET_GAME_SCRIPT(link, GET_NESTED_DATA(scriptData, nestedInfo, INFO), i, data)
+            end
+        end
+    end
+
     if tonumber(data.build) < BUILD then
         data.build = tostring(BUILD)
     end
-    
+
     LFS.mkdir(DOC_DIR .. '/' .. link .. '/Levels')
 
     return data
 end
 
 listeners.but_continue = function(target)
-
     if LOCAL.last == '' then
         MENU.group.isVisible = false
         PROGRAMS = require 'Interfaces.programs'
         PROGRAMS.create()
         PROGRAMS.group.isVisible = true
-        -- PROGRAMS.group.alpha = 0
-        -- timer.new(1, 1, function() transition.to(PROGRAMS.group, {alpha = 1, time = 200}) end)
     else
         local data = GET_GAME_CODE(LOCAL.last_link)
 
@@ -68,20 +102,15 @@ listeners.but_continue = function(target)
             PROGRAM = require 'Interfaces.program'
             PROGRAM.create(LOCAL.last, data.noobmode)
             PROGRAM.group.isVisible = true
-            -- PROGRAM.group.alpha = 0
-            -- timer.new(1, 1, function() transition.to(PROGRAM.group, {alpha = 1, time = 200}) end)
         end
     end
 end
 
 listeners.but_settings = function(target)
-
     MENU.group.isVisible = false
     SETTINGS = require 'Interfaces.settings'
     SETTINGS.create()
     SETTINGS.group.isVisible = true
-    -- SETTINGS.group.alpha = 0
-    -- timer.new(1, 1, function() transition.to(SETTINGS.group, {alpha = 1, time = 200}) end)
 end
 
 listeners.but_social = function(target)
@@ -90,10 +119,12 @@ end
 
 listeners.but_tg = function(target)
     system.openURL('https://t.me/ccode_official')
+    system.openURL('https://t.me/ganin_official')
 end
 
 listeners.but_ad = function(target)
     system.openURL('https://forms.gle/kSAGfqkr1e86GKfn7')
+    system.openURL('https://t.me/ganin_official/576')
 end
 
 listeners.but_dogs = function(target)
@@ -101,8 +132,6 @@ listeners.but_dogs = function(target)
     ROBODOG = require 'Interfaces.robodog'
     ROBODOG.create()
     ROBODOG.group.isVisible = true
-    -- ROBODOG.group.alpha = 0
-    -- timer.new(1, 1, function() transition.to(ROBODOG.group, {alpha = 1, time = 200}) end)
 end
 
 return function(e)

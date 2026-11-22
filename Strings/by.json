@@ -3622,16 +3622,16 @@
         "blocks.onFunNoob.params": [
             "Дзеянне:"
         ],
-        "blocks.onTouchBeganNoob": "Калі палец дакранаецца да выявы",
-        "blocks.onTouchBeganNoob.params": [
+        "blocks.onTouchBegan2Noob": "Калі палец дакранаецца да выявы",
+        "blocks.onTouchBegan2Noob.params": [
             "Назва выявы:"
         ],
-        "blocks.onTouchEndedNoob": "Калі палец адпускае малюнак",
-        "blocks.onTouchEndedNoob.params": [
+        "blocks.onTouchEnded2Noob": "Калі палец адпускае малюнак",
+        "blocks.onTouchEnded2Noob.params": [
             "Назва малюнка:"
         ],
-        "blocks.onTouchMovedNoob": "Калі палец рухаецца па малюнку",
-        "blocks.onTouchMovedNoob.params": [
+        "blocks.onTouchMoved2Noob": "Калі палец рухаецца па малюнку",
+        "blocks.onTouchMoved2Noob.params": [
             "Назва малюнка: "
         ],
         "blocks.onTouchDisplayBeganNoob": "Калі палец дакранаецца экрана",

@@ -3700,16 +3700,16 @@
         "blocks.onFunNoob.params": [
             "Ação:"
         ],
-        "blocks.onTouchBeganNoob": "Dedo toca na Sprite",
-        "blocks.onTouchBeganNoob.params": [
+        "blocks.onTouchBegan2Noob": "Dedo toca na Sprite",
+        "blocks.onTouchBegan2Noob.params": [
             "Nome da Sprite:"
         ],
-        "blocks.onTouchEndedNoob": "Dedo solta a Sprite",
-        "blocks.onTouchEndedNoob.params": [
+        "blocks.onTouchEnded2Noob": "Dedo solta a Sprite",
+        "blocks.onTouchEnded2Noob.params": [
             "Nome da Sprite:"
         ],
-        "blocks.onTouchMovedNoob": "Enquanto o dedo se move na Sprite",
-        "blocks.onTouchMovedNoob.params": [
+        "blocks.onTouchMoved2Noob": "Enquanto o dedo se move na Sprite",
+        "blocks.onTouchMoved2Noob.params": [
             "Nome da Sprite:"
         ],
         "blocks.onTouchDisplayBeganNoob": "Dedo toca na tela",

@@ -21,7 +21,6 @@ return {
             timer.performWithDelay(100, function()
                 local flds = {'Resources', 'Images', 'Sounds', 'Levels', 'Videos', 'Fonts'}
                 local icons = {'mipmap-hdpi-v4', 'mipmap-mdpi-v4', 'mipmap-ldpi-v4', 'mipmap-xhdpi-v4', 'mipmap-xxhdpi-v4', 'mipmap-xxxhdpi-v4'}
-                -- local icons = {'mipmap-hdpi', 'mipmap-mdpi', 'mipmap-xhdpi', 'mipmap-xxhdpi', 'mipmap-xxxhdpi'}
 
                 for i = 1, #flds do
                     for file in LFS.dir(DOC_DIR .. '/' .. link .. '/' .. flds[i]) do
@@ -33,7 +32,8 @@ return {
 
                 WRITE_FILE(DOC_DIR .. '/Build/game.lua', GAME.new(link, nil))
 
-                local title = GAME.data.title
+                local chars = ("!@#$%%^&*()+=[]{}|;:'\"<>?/\\"):gsub('([%%%[%]%-])', '%%%1')
+                local title = GAME.data.title:gsub('[' .. chars .. ']', ''):gsub('%s+', ' '):gsub('^%s*(.-)%s*$', '%1')
                 local build = GAME.data.settings.build
                 local version = GAME.data.settings.version
                 local package = GAME.data.settings.package
@@ -63,7 +63,6 @@ return {
             OS_REMOVE(DOC_DIR .. '/list.json')
             OS_REMOVE(DOC_DIR .. '/Build', true)
             CURRENT_LINK = LAST_CURRENT_LINK or CURRENT_LINK
-            -- CCOIN.set(tonumber(LOCAL.niocc) + (isAab and 100 or 10))
             pcall(function() PROGRAMS.group[8]:setIsLocked(false, 'vertical') end)
         end
     end,
@@ -74,13 +73,6 @@ return {
         LFS.mkdir(MY_PATH .. '/res')
         LFS.mkdir(MY_PATH .. '/assets')
         LFS.mkdir(MY_PATH .. '/assets/Emitter')
-
-        -- LFS.mkdir(MY_PATH .. '/res/mipmap-hdpi')
-        -- LFS.mkdir(MY_PATH .. '/res/mipmap-mdpi')
-        -- LFS.mkdir(MY_PATH .. '/res/mipmap-xhdpi')
-        -- LFS.mkdir(MY_PATH .. '/res/mipmap-xxhdpi')
-        -- LFS.mkdir(MY_PATH .. '/res/mipmap-xxxhdpi')
-
         LFS.mkdir(MY_PATH .. '/res/mipmap-hdpi-v4')
         LFS.mkdir(MY_PATH .. '/res/mipmap-mdpi-v4')
         LFS.mkdir(MY_PATH .. '/res/mipmap-ldpi-v4')

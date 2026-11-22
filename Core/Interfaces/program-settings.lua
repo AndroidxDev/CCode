@@ -1,7 +1,5 @@
 local listeners = {}
 
-
-
 listeners.title = function(target)
     EXITS.psettings()
 end
@@ -13,6 +11,11 @@ listeners.build_button = function(target)
         end
     end, function(e)
         if e.input then
+            if e.text:find('%.') or e.text:find('%-') then
+                WINDOW.new(STR['errors.build'], {STR['button.close'], STR['button.okay']}, function() end, 5)
+                return
+            end
+
             if tonumber(e.text) then
                 local data = GET_GAME_CODE(CURRENT_LINK)
                     data.settings.build = tonumber(e.text)

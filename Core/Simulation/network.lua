@@ -1,6 +1,33 @@
 local CALC = require 'Core.Simulation.calc'
 local M = {}
 
+M['getDonation'] = function(params)
+    local desc, donateId, amount = CALC(params[1]), CALC(params[2], '0'), CALC(params[3], '100')
+
+    GAME.lua = GAME.lua .. '\n pcall(function() local desc, donateId, amount = ' .. desc .. ', ' .. donateId .. ', ' .. amount
+    GAME.lua = GAME.lua .. '\n local url = \'http://213.108.4.150:3000/create-payment?\''
+    GAME.lua = GAME.lua .. '\n url = url .. \'deviceId=\' .. tostring(GAME_DEVICE_ID)'
+    GAME.lua = GAME.lua .. '\n url = url .. \'&amount=\' .. tostring(amount)'
+    GAME.lua = GAME.lua .. '\n url = url .. \'&donateId=\' .. tostring(donateId)'
+    GAME.lua = GAME.lua .. '\n url = url .. \'&desc=\' .. encodeURIComponent(desc)'
+    GAME.lua = GAME.lua .. '\n network.request(url, \'GET\', function(e)'
+    GAME.lua = GAME.lua .. '\n local response = e.response and JSON.decode(e.response)'
+    GAME.lua = GAME.lua .. '\n system.openURL(response.url) end) end)'
+end
+
+M['checkDonation'] = function(params)
+    local donateId, listener = CALC(params[1], '0'), CALC(params[2], 'a', true)
+
+    GAME.lua = GAME.lua .. '\n pcall(function() local donateId, listener = ' .. donateId .. ', ' .. listener
+    GAME.lua = GAME.lua .. '\n local url = \'http://213.108.4.150:3000/check-payment?\''
+    GAME.lua = GAME.lua .. '\n url = url .. \'deviceId=\' .. tostring(GAME_DEVICE_ID)'
+    GAME.lua = GAME.lua .. '\n url = url .. \'&donateId=\' .. tostring(donateId)'
+    GAME.lua = GAME.lua .. '\n network.request(url, \'GET\', function(e)'
+    GAME.lua = GAME.lua .. '\n local response = e.response and JSON.decode(e.response)'
+    GAME.lua = GAME.lua .. '\n if response.status == \'completed\' then listener({check = true})'
+    GAME.lua = GAME.lua .. '\n else listener({check = false}) end end) end)'
+end
+
 M['createBluetooth'] = function(params)
     GAME.lua = GAME.lua .. '\n pcall(function() GIVE_PERMISSION_DATA() GANIN.bluetooth(\'host\','
     GAME.lua = GAME.lua .. '\n function(e) ' .. CALC(params[1], 'a', true) .. '(e) end) end)'
@@ -12,7 +39,7 @@ M['connectBluetooth'] = function(params)
 end
 
 M['sendBluetooth'] = function(params)
-    GAME.lua = GAME.lua .. '\n pcall(function() GIVE_PERMISSION_DATA() GANIN.bluetooth(\'send\', ' .. CALC(params[1], '\'{}\'') ..  ') end)'
+    GAME.lua = GAME.lua .. '\n pcall(function() GIVE_PERMISSION_DATA() GANIN.bluetooth(\'send\', ' .. CALC(params[1], '\'{}\'') .. ') end)'
 end
 
 M['createServer'] = function(params)
@@ -31,7 +58,7 @@ M['requestFirebase'] = function(params, method)
     local link, value = CALC(params[1]), (method == 'GET' or method == 'DELETE') and 'nil' or CALC(params[2])
     local key = (method == 'GET' or method == 'DELETE') and CALC(params[2], '\'\'') or CALC(params[3], '\'\'')
     local link = '\'https://\' .. tostring(' .. link .. ') .. \'.firebaseio.com/\' .. tostring(' .. key .. ') .. \'.json\''
-    local listener = (method == 'GET' or method == 'DELETE') and CALC(params[3], 'a', true)  or CALC(params[4], 'a', true)
+    local listener = (method == 'GET' or method == 'DELETE') and CALC(params[3], 'a', true) or CALC(params[4], 'a', true)
 
     GAME.lua = GAME.lua .. '\n pcall(function() local value = ' .. value
     GAME.lua = GAME.lua .. '\n if type(value) == \'number\' or type(value) == \'boolean\' then value = tostring(value)'
@@ -73,15 +100,13 @@ M['openURL'] = function(params)
 end
 
 M['initUnityAds'] = function(params)
-    if GAME.packageBuild and GAME.isBuild then
-        GAME.lua = GAME.lua .. '\n pcall(function() print(111) local data ='
-        GAME.lua = GAME.lua .. '\n JSON.decode(ENCRYPT_SSL(ENCRYPT(' .. CALC(params[1], '\'\'') .. ', true), true))'
-        GAME.lua = GAME.lua .. '\n print(222) GAME.adsListener = ' .. CALC(params[2], 'a', true)
-        GAME.lua = GAME.lua .. '\n if \'' .. GAME.packageBuild .. '\' ~= data.package then return end print(333)'
-        GAME.lua = GAME.lua .. '\n ADS.init(function(e) print(444) pcall(function()'
+    if GAME.isBuild then
+        GAME.lua = GAME.lua .. '\n pcall(function() local dataID = ' .. CALC(params[1], '\'\'')
+        GAME.lua = GAME.lua .. '\n GAME.adsListener = ' .. CALC(params[2], 'a', true)
+        GAME.lua = GAME.lua .. '\n ADS.init(function(e) pcall(function()'
         GAME.lua = GAME.lua .. '\n if e.phase == \'init\' or e.phase == \'failed\' or e.phase == \'skipped\''
         GAME.lua = GAME.lua .. '\n or e.phase == \'displayed\' then GAME.adsListener(e) elseif e.phase == \'loaded\''
-        GAME.lua = GAME.lua .. '\n then ADS.show(\'AndroidVideo\') end end) end, {gameId = tostring(data.id)}) end)'
+        GAME.lua = GAME.lua .. '\n then ADS.show(\'AndroidVideo\') end end) end, {gameId = tostring(dataID)}) end)'
     else
         GAME.lua = GAME.lua .. '\n pcall(function() GAME.adsListener = ' .. CALC(params[2], 'a', true)
         GAME.lua = GAME.lua .. '\n GAME.adsListener({phase = \'init\'}) end)'
@@ -89,20 +114,7 @@ M['initUnityAds'] = function(params)
 end
 
 M['showUnityAds'] = function(params)
-    GAME.lua = GAME.lua .. '\n pcall(function() print(555) ADS.showAd() end)'
+    GAME.lua = GAME.lua .. '\n pcall(function() ADS.showAd() end)'
 end
-
--- M['initAdsStartApp'] = function(params)
---     GAME.lua = GAME.lua .. '\n pcall(function() STARTAPP.init(function(e) if GAME.hash == hash then ' .. CALC(params[2]) .. '(e)'
---     GAME.lua = GAME.lua .. '\n end end, {appId = ' .. CALC(params[1]) .. '}) end)'
--- end
---
--- M['loadAdsStartApp'] = function(params)
---     GAME.lua = GAME.lua .. '\n pcall(function() STARTAPP.load(' .. CALC(params[1]) .. ') end)'
--- end
---
--- M['showAdsStartApp'] = function(params)
---     GAME.lua = GAME.lua .. '\n pcall(function() STARTAPP.show(' .. CALC(params[1]) .. ') end)'
--- end
 
 return M

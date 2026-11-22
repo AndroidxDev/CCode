@@ -42,8 +42,6 @@ M.listBlock = {
             'onLocalPostCollision',
             'onGlobalCollisionBegan',
             'onGlobalCollisionEnded',
-            'onGlobalPreCollision',
-            'onGlobalPostCollision',
             'onSliderMoved',
             'onSwitchCallback',
             'onWebViewCallback',
@@ -65,6 +63,7 @@ M.listBlock = {
         'insertTable',
         'removeTable',
         'resetTable',
+        'readValue',
         'saveValue',
         'setRandomSeed',
         'hideText',
@@ -91,7 +90,6 @@ M.listBlock = {
         'newObject',
         'newSprite',
         'newGif',
-        -- 'cloneObject',
         'setPos',
         'setPosX',
         'setPosY',
@@ -190,8 +188,6 @@ M.listBlock = {
             'setLocalPreCollision',
             'setLocalPostCollision',
             'setGlobalCollision',
-            'setGlobalPreCollision',
-            'setGlobalPostCollision',
             'setFocus',
             'setFocusMultitouch',
             'activateMultitouch',
@@ -323,7 +319,6 @@ M.listBlock = {
         'setBodyType',
         'setHitboxBox',
         'setHitboxCircle',
-        'setHitboxMesh',
         'setHitboxPolygon',
         'updHitbox',
         'setGravity',
@@ -526,6 +521,8 @@ M.listBlock = {
     },
 
     ['network'] = {
+        'getDonation',
+        'checkDonation',
         'openURL',
         'createServer',
         'connectToServer',
@@ -590,9 +587,9 @@ M.listName = {
         -- noob
         ['onConditionNoob'] = {'events', {'value'}},
             ['onFunNoob'] = {'events', {'fun'}},
-            ['onTouchBeganNoob'] = {'events', {'value'}},
-            ['onTouchEndedNoob'] = {'events', {'value'}},
-            ['onTouchMovedNoob'] = {'events', {'value'}},
+            ['onTouchBegan2Noob'] = {'events', {'value'}},
+            ['onTouchEnded2Noob'] = {'events', {'value'}},
+            ['onTouchMoved2Noob'] = {'events', {'value'}},
             ['onTouchDisplayBeganNoob'] = {'events'},
             ['onTouchDisplayEndedNoob'] = {'events'},
             ['onTouchDisplayMovedNoob'] = {'events'},
@@ -612,6 +609,7 @@ M.listName = {
         ['insertTable'] = {'vars', {'value', {'1', 'n'}}, {'table'}, {'value'}},
         ['removeTable'] = {'vars', {'table'}, {'value', {'1', 'n'}}},
         ['resetTable'] = {'vars', {'table'}, {'value', {'{}', 't'}}},
+        ['readValue'] = {'vars', {'var'}, {'value', {'KEY', 't'}}, {'value'}},
         ['saveValue'] = {'vars', {'value', {'KEY', 't'}}, {'value'}},
         ['setRandomSeed'] = {'vars', {'value'}},
         ['hideText'] = {'vars', {'value'}},
@@ -845,8 +843,6 @@ M.listName = {
             ['setLocalPreCollision'] = {'control', {'value'}, {'fun'}},
             ['setLocalPostCollision'] = {'control', {'value'}, {'fun'}},
             ['setGlobalCollision'] = {'control', {'fun'}},
-            ['setGlobalPreCollision'] = {'control', {'fun'}},
-            ['setGlobalPostCollision'] = {'control', {'fun'}},
             ['setFocus'] = {'control', {'value'}},
             ['toastShort'] = {'control', {'value'}},
             ['toastLong'] = {'control', {'value'}},
@@ -1342,6 +1338,8 @@ M.listName = {
         ['createBluetooth'] = {'network', {'fun'}},
         ['connectBluetooth'] = {'network', {'value'}, {'fun'}},
         ['sendBluetooth'] = {'network', {'value'}},
+        ['getDonation'] = {'network', {'value', {'2xBoost', 't'}}, {'value'}, {'value', {'100', 'n'}}},
+        ['checkDonation'] = {'network', {'value'}, {'fun'}},
 
     -- custom
     ['_custom'] = {'custom'}
@@ -1428,8 +1426,6 @@ local blocksDelete = {
         ['onLocalPostCollision'] = 'events',
         ['onGlobalCollisionBegan'] = 'events',
         ['onGlobalCollisionEnded'] = 'events',
-        ['onGlobalPreCollision'] = 'events',
-        ['onGlobalPostCollision'] = 'events',
         ['onSliderMoved'] = 'events',
         ['onSwitchCallback'] = 'events',
         ['onWebViewCallback'] = 'events',
@@ -1518,8 +1514,6 @@ local blocksDelete = {
         ['setLocalPreCollision'] = 'control',
         ['setLocalPostCollision'] = 'control',
         ['setGlobalCollision'] = 'control',
-        ['setGlobalPreCollision'] = 'control',
-        ['setGlobalPostCollision'] = 'control',
         ['setFocus'] = 'control',
         ['setFocusMultitouch'] = 'control',
         ['requestApi'] = 'control',
@@ -1670,10 +1664,6 @@ table.remove(M.listBlockNoob.everyone, 4)
 M.getType = function(name)
     return M.listName[name] and M.listName[name][1] or 'custom'
 end
-
--- math.randomseed(os.time())
--- local r, g, b = math.random(0, 200) / 255, math.random(0, 200) / 255, math.random(0, 200) / 255
--- print(r .. ', ' .. g .. ', ' .. b)
 
 local function getThemeColor(type, i, isStroke)
     return (LOCAL.themes.logicBlock and LOCAL.themes.logicBlock[type]) and LOCAL.themes.logicBlock[type][i] - (isStroke

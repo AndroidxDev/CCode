@@ -23,60 +23,65 @@ end
 
 local lastMin = ''
 local backupTimerFunc = function()
-    local date = os.date('*t')
-    local hour, minute = tostring(date.hour), tostring(date.min)
-    local diff = tonumber(LOCAL.backup_frequency)
-    local minutes, checkMin = {}, 0
+    pcall(function()
+        local date = os.date('*t')
+        local hour, minute = tostring(date.hour), tostring(date.min)
+        local diff = tonumber(LOCAL.backup_frequency)
+        local minutes, checkMin = {}, 0
 
-    while checkMin < 60 do
-        minutes[tostring(checkMin)] = true
-        checkMin = checkMin + diff
-    end
-
-    if LOCAL.auto_ad and tonumber(minute) % 10 == 0 and minute ~= lastMin then
-        if not IS_WIN and not IS_SIM then
-            lastMin = minute
-            ADS.showAd()
-        end
-    end
-
-    if minutes[minute] then
-        local minute = minute == '0' and '00' or minute
-        local path = DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups/' .. hour .. '.' .. minute
-        local pathData = DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups/data.json'
-        local pathScript = DOC_DIR .. '/' .. CURRENT_LINK .. '/Scripts'
-
-        if not IS_FOLDER(DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups') then
-            LFS.mkdir(DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups')
+        while checkMin < 60 do
+            minutes[tostring(checkMin)] = true
+            checkMin = checkMin + diff
         end
 
-        if not IS_FOLDER(path) then
+        if tonumber(minute) == 30 and minute ~= lastMin then
+            if not IS_WIN and not IS_SIM then
+                lastMin = minute
+                ADS.showAd()
+            end
+        end
+
+        if minutes[minute] then
+            local minute = minute == '0' and '00' or minute
+            local path = DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups/' .. hour .. '.' .. minute
+            local pathData = DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups/data.json'
+            local pathScript = DOC_DIR .. '/' .. CURRENT_LINK .. '/Scripts'
+
+            if not IS_FOLDER(DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups') then
+                LFS.mkdir(DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups')
+            end
+
+            if IS_FOLDER(path) then return end
+
             local data = READ_FILE(pathData) LFS.mkdir(path)
             local gameData = GET_GAME_CODE(CURRENT_LINK)
-            local scripts = gameData.scripts
-            local folders = gameData.folders.scripts
 
-            for file in LFS.dir(pathScript) do
-                if file ~= '.' and file ~= '..' then
-                    OS_COPY(pathScript .. '/' .. file, path .. '/' .. file)
-                end
-            end
+            if gameData then
+                local scripts = gameData.scripts
+                local folders = gameData.folders.scripts
 
-            if data then
-                local data = JSON.decode(data)
-
-                if #data == 8 then
-                    OS_REMOVE(DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups/' .. data[8][1], true)
-                    table.remove(data, 8)
+                for file in LFS.dir(pathScript) do
+                    if file ~= '.' and file ~= '..' then
+                        OS_COPY(pathScript .. '/' .. file, path .. '/' .. file)
+                    end
                 end
 
-                table.insert(data, 1, {hour .. '.' .. minute, scripts, folders})
-                WRITE_FILE(pathData, JSON.encode(data))
-            else
-                WRITE_FILE(pathData, JSON.encode({{hour .. '.' .. minute, scripts, folders}}))
+                if data then
+                    local data = JSON.decode(data)
+
+                    if #data == 8 then
+                        OS_REMOVE(DOC_DIR .. '/' .. CURRENT_LINK .. '/Backups/' .. data[8][1], true)
+                        table.remove(data, 8)
+                    end
+
+                    table.insert(data, 1, {hour .. '.' .. minute, scripts, folders})
+                    WRITE_FILE(pathData, JSON.encode(data))
+                else
+                    WRITE_FILE(pathData, JSON.encode({{hour .. '.' .. minute, scripts, folders}}))
+                end
             end
         end
-    end
+    end)
 end
 
 M.startTimer = function()
@@ -119,9 +124,9 @@ M.create = function(app, noobmode)
     end NOOBMODE = noobmode
 
     local bg = display.newImage(THEMES.bg(), CENTER_X, CENTER_Y)
-        bg.width = CENTER_X == 640 + 0 and DISPLAY_HEIGHT or DISPLAY_WIDTH
-        bg.height = CENTER_X == 640 + 0 and DISPLAY_WIDTH or DISPLAY_HEIGHT
-        bg.rotation = CENTER_X == 640 + 0 and 90 or 0
+        bg.width = CENTER_X == 640 and DISPLAY_HEIGHT or DISPLAY_WIDTH
+        bg.height = CENTER_X == 640 and DISPLAY_WIDTH or DISPLAY_HEIGHT
+        bg.rotation = CENTER_X == 640 and 90 or 0
     M.group:insert(bg)
 
     local title = display.newText(app, ZERO_X + 40, ZERO_Y + 30, 'ubuntu', 50)
